@@ -107,7 +107,7 @@ function App() {
         setMessages(msgs => [...msgs, { user: 'you', text: input }]);
         try {
             // Use the ngrok URL here too
-            await fetch('https://35f075c31996.ngrok-free.app/api/message', {
+            await fetch('https://ccd7acd799a0.ngrok-free.app', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: input }),
