@@ -1,7 +1,7 @@
-
 [build]
   command = "npm run build"
-  publish = "frontend/dist"
+  # The publish directory is relative to the 'base' directory.
+  publish = "dist"
   base = "frontend"
 
 [[redirects]]
