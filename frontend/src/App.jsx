@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-// --- CHANGE #1: UPDATE THE SOCKET URL ---
-const socket = io('https://d4302a110387.ngrok-free.app');
+// --- THIS IS THE FINAL CHANGE ---
+// Force the connection to use only WebSockets.
+const socket = io('https://d4302a110387.ngrok-free.app', {
+  transports: ['websocket']
+});
 
 const solanaGradient = 'linear-gradient(135deg, #9945FF 0%, #14F195 50%, #00FFD0 100%)';
 
