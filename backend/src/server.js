@@ -16,7 +16,10 @@ const io = new Server(server, {
     cors: {
         origin: "https://thunderous-ganache-22791e.netlify.app",
         methods: ["GET", "POST"]
-    }
+    },
+    // Add these compatibility options
+    transports: ['websocket', 'polling'],
+    allowEIO3: true
 });
 
 // --- ADD THIS LOG ---
