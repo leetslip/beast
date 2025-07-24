@@ -92,13 +92,19 @@ function App() {
 
     // Listen for new messages from Discord
     useEffect(() => {
-        socket.on('newDiscordMessage', (msg) => {
-            setMessages(prev => [...prev, msg]);
-        });
-        return () => {
-            socket.off('newDiscordMessage');
+        // Function to handle new messages from the backend
+        const handleNewMessage = (message) => {
+            setMessages(msgs => [...msgs, message]);
         };
-    }, []);
+
+        // Set up the listener
+        socket.on('newDiscordMessage', handleNewMessage);
+
+        // Clean up the listener when the component unmounts
+        return () => {
+            socket.off('newDiscordMessage', handleNewMessage);
+        };
+    }, []); // The empty array ensures this runs only once
 
     const handleSend = async (e) => {
         e.preventDefault();

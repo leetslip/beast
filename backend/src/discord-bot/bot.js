@@ -41,10 +41,23 @@ client.once('ready', () => {
 
 // When a message is created in Discord, emit it to Socket.IO clients
 client.on('messageCreate', async message => {
-    // Add this line to only listen to your specific channel
     if (message.channel.id !== CHANNEL_ID) return;
 
-    // For example, ignore messages sent by the bot itself:
+    // --- MODIFICATION TO HANDLE EMBEDS ---
+    // Check for embeds first, especially from other bots
+    if (message.embeds.length > 0 && message.author.bot) {
+        const embed = message.embeds[0];
+        // Combine title and description from the embed
+        const embedText = `${embed.title || ''} ${embed.description || ''}`.trim();
+        
+        if (embedText) {
+            console.log(`Embed from ${message.author.username}: ${embedText}`);
+            io.emit('newDiscordMessage', { user: message.author.username, text: embedText });
+        }
+        return; // Stop processing if we handled an embed
+    }
+    
+    // Ignore messages from bots if they are not embeds
     if (message.author.bot) return;
 
     // --- Example: Add a wallet key ---
@@ -83,8 +96,8 @@ client.on('messageCreate', async message => {
         return;
     }
 
+    // If it's a regular user message, send it
     console.log(`Discord Message from ${message.author.username}: ${message.content}`);
-    // Emit the new message event to frontend clients
     io.emit('newDiscordMessage', { user: message.author.username, text: message.content });
     
     // Existing command sample:
@@ -118,17 +131,16 @@ app.post('/api/message', async (req, res) => {
 // Create HTTP server and wrap Express app
 const server = http.createServer(app);
 
-// Create Socket.IO server and allow CORS requests
+// Add this cors configuration to your Socket.IO server
 const io = new Server(server, {
     cors: {
-        origin: "*", // Adjust this in production
+        origin: "*", // Allow connections from any origin
         methods: ["GET", "POST"]
     }
 });
 
 client.login(DISCORD_TOKEN);
 
-// Start the HTTP server (which now also serves Socket.IO)
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
