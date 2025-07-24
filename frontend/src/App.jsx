@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-// 1. Use the CURRENT ngrok URL for listening
-const socket = io('https://ccd7acd799a0.ngrok-free.app');
+// --- CHANGE #1: UPDATE THE SOCKET URL ---
+const socket = io('https://d4302a110387.ngrok-free.app');
 
 const solanaGradient = 'linear-gradient(135deg, #9945FF 0%, #14F195 50%, #00FFD0 100%)';
 
@@ -90,9 +90,7 @@ function App() {
     ]);
     const [input, setInput] = useState('');
 
-    // --- MODIFICATION TO ADD LOGGING ---
     useEffect(() => {
-        // Log socket connection events
         socket.on('connect', () => {
             console.log('[Frontend] Socket connected successfully. ID:', socket.id);
         });
@@ -105,32 +103,28 @@ function App() {
             console.error('[Frontend] Socket connection error:', err.message);
         });
 
-        // Function to handle new messages from the backend
         const handleNewMessage = (message) => {
             console.log('[Frontend] Received newDiscordMessage:', message);
             setMessages(msgs => [...msgs, message]);
         };
 
-        // Set up the listener
         socket.on('newDiscordMessage', handleNewMessage);
 
-        // Clean up the listeners when the component unmounts
         return () => {
             socket.off('newDiscordMessage', handleNewMessage);
             socket.off('connect');
             socket.off('disconnect');
             socket.off('connect_error');
         };
-    }, []); // The empty array ensures this runs only once
+    }, []);
 
     const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
-        // Add message locally (from you)
         setMessages(msgs => [...msgs, { user: 'you', text: input }]);
         try {
-            // 2. Add the correct API path to the fetch URL for sending
-            await fetch('https://ccd7acd799a0.ngrok-free.app/api/message', {
+            // --- CHANGE #2: UPDATE THE FETCH URL ---
+            await fetch('https://d4302a110387.ngrok-free.app/api/message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: input }),
