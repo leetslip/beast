@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-// Use your public ngrok URL
-const socket = io('https://35f075c31996.ngrok-free.app');
+// 1. Use the CURRENT ngrok URL for listening
+const socket = io('https://ccd7acd799a0.ngrok-free.app');
 
 const solanaGradient = 'linear-gradient(135deg, #9945FF 0%, #14F195 50%, #00FFD0 100%)';
 
@@ -106,8 +106,8 @@ function App() {
         // Add message locally (from you)
         setMessages(msgs => [...msgs, { user: 'you', text: input }]);
         try {
-            // Use the ngrok URL here too
-            await fetch('https://ccd7acd799a0.ngrok-free.app', {
+            // 2. Add the correct API path to the fetch URL for sending
+            await fetch('https://ccd7acd799a0.ngrok-free.app/api/message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: input }),
