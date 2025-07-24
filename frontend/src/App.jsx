@@ -100,7 +100,9 @@ function App() {
         });
 
         socket.on('connect_error', (err) => {
-            console.error('[Frontend] Socket connection error:', err.message);
+            // --- THIS IS THE CHANGE ---
+            // Log the entire error object for more details
+            console.error('[Frontend] Full socket connection error object:', err);
         });
 
         const handleNewMessage = (message) => {

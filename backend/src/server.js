@@ -7,10 +7,9 @@ const initializeBot = require('./discord-bot/bot.js');
 
 const app = express();
 
-// --- THIS IS THE CRITICAL CHANGE ---
-// Replace the simple app.use(cors()) with this more specific configuration.
+// --- DEBUGGING CHANGE: ALLOW ALL ORIGINS ---
 const corsOptions = {
-  origin: "https://thunderous-ganache-22791e.netlify.app",
+  origin: "*",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 };
@@ -24,10 +23,10 @@ const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://thunderous-ganache-22791e.netlify.app",
+        // --- DEBUGGING CHANGE: ALLOW ALL ORIGINS ---
+        origin: "*",
         methods: ["GET", "POST"]
     },
-    // Add these compatibility options
     transports: ['websocket', 'polling'],
     allowEIO3: true
 });
