@@ -1,0 +1,15 @@
+# Node dependencies
+**/node_modules/
+
+# Build output
+**/dist/
+
+# Environment variables
+**/.env
+
+# Database files
+*.db
+*.sqlite
+
+# Log files
+*.log
