@@ -90,19 +90,36 @@ function App() {
     ]);
     const [input, setInput] = useState('');
 
-    // Listen for new messages from Discord
+    // --- MODIFICATION TO ADD LOGGING ---
     useEffect(() => {
+        // Log socket connection events
+        socket.on('connect', () => {
+            console.log('[Frontend] Socket connected successfully. ID:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('[Frontend] Socket disconnected.');
+        });
+
+        socket.on('connect_error', (err) => {
+            console.error('[Frontend] Socket connection error:', err.message);
+        });
+
         // Function to handle new messages from the backend
         const handleNewMessage = (message) => {
+            console.log('[Frontend] Received newDiscordMessage:', message);
             setMessages(msgs => [...msgs, message]);
         };
 
         // Set up the listener
         socket.on('newDiscordMessage', handleNewMessage);
 
-        // Clean up the listener when the component unmounts
+        // Clean up the listeners when the component unmounts
         return () => {
             socket.off('newDiscordMessage', handleNewMessage);
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('connect_error');
         };
     }, []); // The empty array ensures this runs only once
 

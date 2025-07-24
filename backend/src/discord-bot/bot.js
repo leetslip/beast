@@ -139,6 +139,29 @@ const io = new Server(server, {
     }
 });
 
+// Add logging to the messageCreate event
+client.on('messageCreate', async message => {
+    if (message.channel.id !== CHANNEL_ID) return;
+
+    // Handle embeds from other bots
+    if (message.embeds.length > 0 && message.author.bot) {
+        const embed = message.embeds[0];
+        const embedText = `${embed.title || ''} ${embed.description || ''}`.trim();
+        if (embedText) {
+            console.log(`[Backend] Emitting embed from ${message.author.username}`); // LOG
+            io.emit('newDiscordMessage', { user: message.author.username, text: embedText });
+        }
+        return;
+    }
+    
+    if (message.author.bot) return;
+
+    // Handle regular user messages
+    console.log(`[Backend] Emitting message from ${message.author.username}`); // LOG
+    io.emit('newDiscordMessage', { user: message.author.username, text: message.content });
+});
+
+
 client.login(DISCORD_TOKEN);
 
 server.listen(PORT, () => {
